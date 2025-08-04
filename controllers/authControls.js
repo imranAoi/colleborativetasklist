@@ -14,18 +14,31 @@ export const loginUser= async(req,res)=>{
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
+   const token = jwt.sign(
+      { _id: user._id, email: user.email }, // ✅ use _id
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    res.status(200).json({ message: "Login successful", token, user: { name: user.name, email: user.email } });
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Lax",
+        maxAge: 3600000, // 1 hour
+      })
+      .status(200)
+      .json({
+        message: "Login successful",
+        user: { name: user.name, email: user.email, _id: user._id },
+        token,
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Login failed" });
   }
-}
+};
+  
 export const signupUser= async(req,res)=>{
    const { name,email,password}=req.body
    

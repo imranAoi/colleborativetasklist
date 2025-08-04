@@ -22,6 +22,11 @@ const user = new mongoose.Schema({
 
   resetPasswordToken: String,
   resetPasswordExpires: Date,
-});
+
+  displayName: { type: String },
+  usageType: { type: String, enum: ['own', 'friend'] },
+  projectName: { type: String },
+  hasCompletedOnboarding: { type: Boolean, default: false },
+}, { timestamps: true });
 
 export default mongoose.model("User",user)

@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 import dbConnection from './config/db.js'
 import AuthRouter from './routes/authRoute.js'
 import cors from 'cors'
+import cookieParser from "cookie-parser";
+
 dbConnection()
 dotenv.config()
 const app=express()
@@ -12,7 +14,7 @@ app.use(cors({
     origin:"http://localhost:3000",
     credentials:true
 }))
-
+app.use(cookieParser());
 app.use('/api',AuthRouter)
 app.get('/',(req,res)=>{
     res.send("index")
