@@ -29,7 +29,7 @@ router.post("/google-login",googleSignin);
 router.post("/save-onboarding", verifyToken, saveOnboarding);
 
 router.post("/tasks", verifyToken, createTask);      // Create
-router.get("/tasks", verifyToken, getTasks);         // Read
+router.get("/tasks/", verifyToken, getTasks);         // Read
 router.put("/tasks/:id", verifyToken, updateTask);    // Update
 router.delete("/tasks/:id", verifyToken, deleteTask); // Delete
 
