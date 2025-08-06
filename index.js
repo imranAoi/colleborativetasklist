@@ -15,10 +15,11 @@ const PORT = process.env.PORT || 8000;
 // ✅ Allowed origins for CORS
 const allowedOrigins = [
   "http://localhost:3000", // local dev frontend
-  "https://frontendof-ctl.vercel.app" // production frontend
+  "https://frontendof-ctl.vercel.app", // production frontend
+  "https://frontendof-roforlnb1-mohd-imrans-projects-1e701637.vercel.app"
 ];
 
-// ✅ CORS setup
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -27,9 +28,9 @@ app.use(cors({
       callback(new Error("Not allowed by CORS: " + origin));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true // ✅ allow cookies
+  credentials: true,
 }));
+
 
 // ✅ Basic security headers
 app.use(helmet({
