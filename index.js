@@ -4,41 +4,50 @@ import dbConnection from './config/db.js';
 import AuthRouter from './routes/authRoute.js';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 
 dotenv.config();
 dbConnection();
 
 const app = express();
-const PORT = "8000";
+const PORT = process.env.PORT || 8000;
 
+// ✅ Allowed origins for CORS
 const allowedOrigins = [
-  "http://localhost:3000",
-  "https://frontendof-ctl.vercel.app"
+  "http://localhost:3000", // local dev frontend
+  "https://frontendof-ctl.vercel.app" // production frontend
 ];
 
-const corsOptions = {
+// ✅ CORS setup
+app.use(cors({
   origin: function (origin, callback) {
-    console.log("CORS check for origin:", origin);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS: " + origin));
     }
   },
-  credentials: true,
-};
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true // ✅ allow cookies
+}));
 
-// ✅ CORS must come FIRST
-app.use(cors(corsOptions));
+// ✅ Basic security headers
+app.use(helmet({
+  contentSecurityPolicy: false // disable CSP for now to avoid breaking frontend
+}));
+
+// ✅ Parse cookies and JSON
 app.use(cookieParser());
 app.use(express.json());
 
+// ✅ Routes
 app.use('/api', AuthRouter);
 
 app.get('/', (req, res) => {
-  res.send("index");
+  res.send("Server is running");
 });
 
+// ✅ Start server
 app.listen(PORT, () => {
-  console.log(`server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
